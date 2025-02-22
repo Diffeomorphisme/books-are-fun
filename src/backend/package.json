@@ -1,0 +1,21 @@
+{
+  "name": "backend",
+  "module": "api/index.ts",
+  "type": "module",
+  "scripts": {
+    "dev": "bun run --hot api/index.ts",
+    "start": "bun run api/index.ts"
+  },
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "@hono/zod-validator": "^0.4.3",
+    "drizzle-orm": "^0.39.3",
+    "hono": "^4.7.2",
+    "postgres": "^3.4.5"
+  }
+}
