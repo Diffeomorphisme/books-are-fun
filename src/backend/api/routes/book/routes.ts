@@ -23,6 +23,8 @@ const bookRouter = new OpenAPIHono()
 const getBookRoute = createRoute({
   method: 'get',
   path: '/{id}',
+  summary: "Fetch single book",
+  tags: ["api/books"],
   request: {
     params: GetBookPathParam,
   },
@@ -59,6 +61,8 @@ bookRouter.openapi(getBookRoute, async (c) => {
 const getAllBooksRoute = createRoute({
   method: 'get',
   path: '/',
+  summary: "Fetch all books",
+  tags: ["api/books"],
   responses: {
     200: {
       content: {
@@ -84,6 +88,8 @@ bookRouter.openapi(getAllBooksRoute, async (c) => {
 const createBookRoute = createRoute({
   method: 'post',
   path: '/',
+  summary: "Add book",
+  tags: ["api/books"],
   request: {
     body: {
       content: {
@@ -111,6 +117,8 @@ bookRouter.openapi(createBookRoute, async (c) => {
 const updateBookRoute = createRoute({
   method: 'put',
   path: '/{id}',
+  summary: "Update book",
+  tags: ["api/books"],
   request: {
     params: UpdateBookPathParam,
     body: {
@@ -149,6 +157,8 @@ bookRouter.openapi(updateBookRoute, async (c) => {
 const removeBookRoute = createRoute({
   method: 'delete',
   path: '/{id}',
+  summary: "Delete book",
+  tags: ["api/books"],
   request: {
     params: DeleteBookPathParam,
   },
