@@ -2,8 +2,8 @@ import { drizzle } from 'drizzle-orm/postgres-js';
 import postgres from 'postgres';
 import * as schema from './schemas';
 
-//const CONNECTION_STRING = "postgresql://testuser:testpwd@localhost:5432/testdb";
-const CONNECTION_STRING = "postgresql://testuser:testpwd@db:5432/testdb";
+const CONNECTION_STRING = "postgresql://testuser:testpwd@127.0.0.1:5432/testdb";
+// const CONNECTION_STRING = "postgresql://testuser:testpwd@db:5432/testdb";
 
 if (!CONNECTION_STRING) {
   throw new Error('No DB connection string provided');

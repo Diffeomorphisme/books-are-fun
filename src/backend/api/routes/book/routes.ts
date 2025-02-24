@@ -1,4 +1,12 @@
-import { BookParam, UpdateBookBody, CreateBookBody } from "./schema";
+import { 
+  GetBookPathParam,
+  UpdateBookPathParam,
+  DeleteBookPathParam,
+  CreateBookBody,
+  UpdateBookBody,
+  GetBookResponse,
+  GetAllBooksResponse
+} from "./schema";
 import { 
   createBook, 
   deleteBookById, 
@@ -6,23 +14,64 @@ import {
   getAllBooks, 
   getBookById 
 } from "../../../db/src"
-import { Hono } from "hono"
-import { zValidator } from "@hono/zod-validator";
 import { HTTPException } from "hono/http-exception";
+import { OpenAPIHono, createRoute } from '@hono/zod-openapi'
 
-const bookRouter = new Hono()
-.get("/:id", zValidator("param", BookParam), async (c) => {
+const bookRouter = new OpenAPIHono()
+
+// ==========GET SINGLE BOOK=========
+const getBookRoute = createRoute({
+  method: 'get',
+  path: '/{id}',
+  request: {
+    params: GetBookPathParam,
+  },
+  responses: {
+    200: {
+      content: {
+        'application/json': {
+          schema: GetBookResponse,
+        },
+      },
+      description: 'Retrieve the book',
+    },
+    404: {
+      content: {},
+      description: "Book not found"
+    }
+  },
+})
+
+bookRouter.openapi(getBookRoute, async (c) => {
   const bookId = c.req.param("id");
   const book = await getBookById(bookId);
 
   if (!book) {
-    throw new HTTPException(404, { message: "Not found" });
+    throw new HTTPException(404);
   }
   return c.json({
+    id: book.id,
     title: book.title
-  });
+  }, 200);
 })
-.get("/", async (c) => {
+
+// ===========GET ALL BOOKS==========
+const getAllBooksRoute = createRoute({
+  method: 'get',
+  path: '/',
+  responses: {
+    200: {
+      content: {
+        'application/json': {
+          schema: GetAllBooksResponse,
+        },
+      },
+      description: 'Retrieve all books',
+    },
+  },
+})
+
+bookRouter.openapi(getAllBooksRoute, async (c) => {
   const books = await getAllBooks()
   return c.json(
     books.map((book) => {
@@ -30,24 +79,91 @@ const bookRouter = new Hono()
     })
   );
 })
-.post("/", zValidator("json", CreateBookBody), async (c) => {
-  const { bookTitle } = c.req.valid("json");
-  const createdBook = await createBook(bookTitle)
 
-  return c.json(createdBook, 201);
+// =============ADD BOOK=============
+const createBookRoute = createRoute({
+  method: 'post',
+  path: '/',
+  request: {
+    body: {
+      content: {
+        'application/json': {
+          schema: CreateBookBody
+        },
+      },
+    },
+  },
+  responses: {
+    201: {
+      description: 'Book created',
+    },
+  },
 })
-.put("/:id", zValidator("json", UpdateBookBody), async (c) => {
+
+bookRouter.openapi(createBookRoute, async (c) => {
+  const { title } = c.req.valid("json");
+  await createBook(title);
+  return c.json({message: 'Book created'}, 200);
+});
+
+
+// ============UDPATE BOOK===========
+const updateBookRoute = createRoute({
+  method: 'put',
+  path: '/{id}',
+  request: {
+    params: UpdateBookPathParam,
+    body: {
+      content: {
+        'application/json': {
+          schema: UpdateBookBody
+        },
+      },
+    },
+  },
+  responses: {
+    200: {
+      description: 'Book updated',
+    },
+    404: {
+      content: {},
+      description: "Book not found"
+    }
+  },
+});
+
+bookRouter.openapi(updateBookRoute, async (c) => {
   const bookId = c.req.param("id");
-  const { bookTitle } = c.req.valid("json");
+  const { title } = c.req.valid("json");
   const book = await getBookById(bookId);
 
   if (!book) {
     throw new HTTPException(404, { message: "Not found" });
   }
-  await updateBookById(bookId, bookTitle)
-  return c.json({ message: "Book updated" });
-})
-.delete("/:id", async (c) => {
+  console.log(book)
+  await updateBookById(bookId, title)
+  return c.json({message: 'Book updated'},200);
+});
+
+// ============DELETE BOOK===========
+const removeBookRoute = createRoute({
+  method: 'delete',
+  path: '/{id}',
+  request: {
+    params: DeleteBookPathParam,
+  },
+  responses: {
+    200: {
+      description: 'Book deleted',
+    },
+    404: {
+      content: {},
+      description: "Book not found"
+    }
+  },
+});
+
+bookRouter.openapi(removeBookRoute, async (c) => {
   const bookId = c.req.param("id");
   const book = await getBookById(bookId);
 
@@ -55,7 +171,7 @@ const bookRouter = new Hono()
     throw new HTTPException(404, { message: "Not found" });
   }
   await deleteBookById(bookId);
-  return c.json({ message: "Book deleted" });
-})
+  return c.json({ message: "Book deleted" }, 200);
+});
 
 export default bookRouter;

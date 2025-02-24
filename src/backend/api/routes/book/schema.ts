@@ -1,21 +1,61 @@
-import { z } from 'zod';
+import { z } from '@hono/zod-openapi';
 
-export const BookParam = z.object({
-  bookTitle: z.string()
+export const GetBookPathParam = z.object({
+  id: z
+    .string()
+    .min(3)
+    .openapi({
+      param: {
+        name: 'id',
+        in: 'path',
+      },
+      example: '88ae4afd-8b92-403e-832a-d7644aa72313'
+    })
 });
 
-export const GetAllBooksResponse = z.object({
-  bookTitles: z.array(z.string()),
+export const UpdateBookPathParam = z.object({
+  id: z
+    .string()
+    .min(3)
+    .openapi({
+      param: {
+        name: 'id',
+        in: 'path',
+      },
+      example: '88ae4afd-8b92-403e-832a-d7644aa72313'
+    })
 });
 
-export const AddBookBody = z.object({
-  bookTitle: z.string(),
+export const DeleteBookPathParam = z.object({
+  id: z
+    .string()
+    .min(3)
+    .openapi({
+      param: {
+        name: 'id',
+        in: 'path',
+      },
+      example: '88ae4afd-8b92-403e-832a-d7644aa72313'
+    })
 });
+
+export const GetAllBooksResponse = z.array(
+  z.object({
+    id: z.string(),
+    title: z.string()
+  })
+);
 
 export const UpdateBookBody = z.object({
-  bookTitle: z.string(),
+  title: z.string(),
 });
 
 export const CreateBookBody = z.object({
-  bookTitle: z.string(),
+  title: z.string(),
 });
+
+export const GetBookResponse = z.object({
+  id: z.string(),
+  title: z.string()
+})
+
