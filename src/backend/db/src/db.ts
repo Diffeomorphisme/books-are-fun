@@ -2,8 +2,7 @@ import { drizzle } from 'drizzle-orm/postgres-js';
 import postgres from 'postgres';
 import * as schema from './schemas';
 
-const CONNECTION_STRING = "postgresql://testuser:testpwd@127.0.0.1:5432/testdb";
-// const CONNECTION_STRING = "postgresql://testuser:testpwd@db:5432/testdb";
+const CONNECTION_STRING = "postgresql://testuser:testpwd@db:5432/testdb";
 
 if (!CONNECTION_STRING) {
   throw new Error('No DB connection string provided');
@@ -19,3 +18,6 @@ export {
   db,
   migrationClient
 }
+
+// To do - Change hardcoded database connection string to an environment variable declaration
+// To do - Add seeding script and migration script (drizzle-kit) in relevant files

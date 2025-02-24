@@ -12,7 +12,7 @@ const routes = app
   .route("/api/books", bookRouter)
   .get('/ui', swaggerUI({ url: '/doc' }));
 
-// The OpenAPI documentation will be available at /doc
+// The OpenAPI documentation available at /doc
 app.doc('/doc', {
   openapi: '3.0.0',
   info: {
@@ -24,3 +24,5 @@ app.doc('/doc', {
 export default app;
 
 export type Api = typeof routes;
+
+// To do -  Protect API access behind authentication
