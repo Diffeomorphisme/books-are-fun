@@ -13,6 +13,12 @@ The project is divided into two parts:
 ### Docker
 From the root of the project, run:
 ```bash
-docker-compose up
+docker compose up -d
 ```
-The frontend will be reachable [here](http://127.0.0.1:1234)
+The frontend is reachable [here](http://127.0.0.1:1234)
+
+
+## To dos
+
+- For frontend/backend specific todo, refer to their respective READMEs.
+- docker compose: introduce environment variables at this stage
