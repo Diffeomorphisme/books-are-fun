@@ -25,4 +25,4 @@ export default app;
 
 export type Api = typeof routes;
 
-// To do -  Protect API access behind authentication
+// To do - Protect API access behind authentication
